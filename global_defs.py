@@ -8,6 +8,7 @@ training_benign_image_folder = training_Files_Folder + 'benign'
 gt_train_val_location = training_Files_Folder + 'train_val'
 gt_file_location = training_Files_Folder + 'isic_data_train_val.csv'
 ignore_folder = 'SONIC'
+gt_nb_classes = 2
 
 small_width = 400
 small_height = 400

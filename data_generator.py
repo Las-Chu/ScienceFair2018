@@ -16,15 +16,14 @@ def read_gt_data(limit=-1):
     lines = []
 
     # Open the GroundTruth.csv file as csvfile
-    with open(gf.data_folder + gf.gt_file) as csvfile:
+    with open(gf.gt_file_location) as csvfile:
         reader = csv.reader(csvfile)
         num_lines = 0
         for line in reader:
-            if gf.sCheckData in line[0]:
-                lines.append(line)
-                num_lines += 1
-                if (limit > 0) and (num_lines > limit):
-                    break
+            lines.append(line)
+            num_lines += 1
+            if (limit > 0) and (num_lines > limit):
+                break
     print('Number of lines read so far:', len(lines))
 
     return lines
@@ -190,8 +189,8 @@ def measure_target_value_for_isic_data(prim, sub):
 
 
 def generator(samples, batch_size=32):
-    label_binarizer = LabelBinarizer()
-    label_binarizer.fit(gf.lb_fit_array)
+    #label_binarizer = LabelBinarizer()
+    #label_binarizer.fit(gf.lb_fit_array)
     num_samples = len(samples)
     while 1:  # Loop forever so the generator never terminates
         sklearn.utils.shuffle(samples)
@@ -204,26 +203,24 @@ def generator(samples, batch_size=32):
             for batch_sample in batch_samples:
 
                 # Read the center image (first one from the parsed list)
-                image_name = batch_sample[0]
-                image_with_full_name = gf.target_train_dir + image_name + gf.target_img_ext
+                image_name = batch_sample[1]
+                image_with_full_name = gf.gt_train_val_location + '/' + image_name + gf.target_img_ext
                 # print('Image with full name', image_with_full_name)
                 # imageMat = cv2.imread(image_with_full_name)
                 imageMat = image.load_img(image_with_full_name, target_size=(229, 229))
                 x = image.img_to_array(imageMat)
                 #print("xshape", x.shape)
                 # print('image shape', imageMat.shape)
-                if gf.sCheckData in batch_sample[0]:
-                    detected_value = float(measure_target_value_for_isic_data(float(batch_sample[1]), float(batch_sample[2])))
-                else:
-                    detected_value = float(batch_sample[1])
-                '''
+
+                detected_value = float(batch_sample[2])
+
                 if (detected_value > 0):
                     detect_arr = [1, 0]
                 else:
                     detect_arr = [0, 1]
-                '''
+
                 images.append(x)
-                target.append(detected_value)
+                target.append(detect_arr)
                 # print(image_name, detect_arr)
 
             # Convert the images into numpy array
@@ -236,7 +233,7 @@ def generator(samples, batch_size=32):
             #print("xshape3", X_train.shape)
             Y_train = np.array(target)
 
-            y_one_hot = label_binarizer.transform(Y_train)
+            #y_one_hot = label_binarizer.transform(Y_train)
             #print(Y_train, y_one_hot)
 
-            yield sklearn.utils.shuffle(X_train, y_one_hot)
+            yield sklearn.utils.shuffle(X_train, Y_train)
