@@ -93,24 +93,35 @@ if (to_be_trained):
     # Save the model to be used in testing the autonomous mode for the car
     model.save(gf.project_name+'.h5')
 
+    # list all data in history
+    print(history_object.history.keys())
+
     # plot the training and validation loss for each epoch
-    '''
+
     import matplotlib.pyplot as plt
-    plt.plot(history_object.history['loss'])
-    plt.plot(history_object.history['val_loss'])
-    plt.plot(history_object.history['val_acc'])
-    plt.title('Model mean squared error loss')
-    plt.ylabel('mean squared error loss')
+
+    plt.plot(history_object.history['categorical_accuracy'])
+    plt.plot(history_object.history['val_categorical_accuracy'])
+    plt.title('ISIC Cancer Detection Model accuracy')
+    plt.ylabel('accuracy')
     plt.xlabel('epoch')
     plt.legend(['training set', 'validation set'], loc='upper right')
     plt.show()
-    '''
+
+    plt.plot(history_object.history['loss'])
+    plt.plot(history_object.history['val_loss'])
+    plt.title('ISIC Cancer Detection Model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['training set', 'validation set'], loc='upper right')
+    plt.show()
+
 
 else:
     # Predict the image feature
-    test_file = '/home/ramesh/Data/ISIC-2017_Test_v2_Data/'+ 'ISIC_0015051.jpg'
+    test_file = '/home/ramesh/Data/ISIC-2017_Test_v2_Data/'+ 'ISIC_0014703.jpg'
     model.load_weights(gf.project_name+'.h5')
-    img = image_cropping.ret_proc_image(test_file, [229, 229])
+    img = image_cropping.ret_proc_image(test_file, [299, 299])
     #img = image.load_img(gf.gt_train_val_location+'/ISIC_0016071.jpg', target_size=(229, 229))
     x = image.img_to_array(img)
     x = np.expand_dims(x, axis=0)

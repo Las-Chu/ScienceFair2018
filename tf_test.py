@@ -9,3 +9,13 @@ with tf.device('/device:GPU:0'):
 sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
 # Runs the op.
 print(sess.run(c))
+
+import matplotlib.pyplot as plt
+
+plt.plot([1, 2,3,4])
+plt.plot([2,3,4,5])
+plt.title('Model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['training set', 'validation set'], loc='upper right')
+plt.show()

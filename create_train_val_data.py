@@ -6,8 +6,8 @@ import global_defs as gf
 
 def crop_center(img, cropx, cropy):
     y, x, c = img.shape
-    startx = x // 2 - (cropx // 2)
-    starty = y // 2 - (cropy // 2)
+    startx = (x - cropx) / 2
+    starty = (y - cropy) / 2
     return img[starty:starty + cropy, startx:startx + cropx]
 
 
@@ -53,7 +53,8 @@ import random
 from os.path import basename
 
 def create_train_data(src_folder, isbenign, ismalign, target_folder):
-    # Opebn GT file for wrting the file name and hot endoded data
+
+
     b_file = open(gf.gt_file_location, 'a')
     images = glob.glob(src_folder+ '/*' + gf.target_img_ext)
     for image in images:
@@ -63,18 +64,12 @@ def create_train_data(src_folder, isbenign, ismalign, target_folder):
         # copy the resized file to the trained data folder
         process_image(target_folder, image)
 
-def resize_all_images():
-
-    images = glob.glob('/home/ramesh/Data/isic2017_data/ISIC-2017_Orig_train_data/*.jpg')
-    print(len(images))
-
-    # Code that resizes the images from /home/ramesh/Data/isic2017_data/ISIC-2017_Training_Data/ and resizes them to 299x299 (smallest size of all images
-    #
-    for image in images:
-        process_image(gf.target_train_dir, image)
 
 
 # Create the new train val data set and ground truth tables
+# Opebn GT file for wrting the file name and hot endoded data
+if os.path.exists(gf.gt_file_location):
+    os.remove(gf.gt_file_location)
 
 # create the folder for the train_val images
 if not os.path.exists(gf.gt_train_val_location):

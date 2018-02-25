@@ -138,14 +138,14 @@ def augment_melanoma_image(melanoma_img_folder, file_key_name):
     #sharpened = cv2.addWeighted(image_init, 2, blurred_f, -1, 0)
     #cv2.imwrite(fileNamewithFolder, sharpened)
 
-    # Add rotation at 10
+    # Add rotation at 15
     fileNamewithFolder = melanoma_img_folder + '/' + file_key_name + '_rtr' + gf.target_img_ext
     rows, cols, channels = image_init.shape
     M = cv2.getRotationMatrix2D((cols / 2, rows / 2), 15, 1)
     rotated = cv2.warpAffine(image_init, M, (cols, rows))
     cv2.imwrite(fileNamewithFolder, rotated)
 
-    # Add rotation at -10
+    # Add rotation at -15
     fileNamewithFolder = melanoma_img_folder + '/' + file_key_name + '_rtl' + gf.target_img_ext
     rows, cols, channels = image_init.shape
     M = cv2.getRotationMatrix2D((cols / 2, rows / 2), -15, 1)
@@ -207,7 +207,7 @@ def generator(samples, batch_size=32):
                 image_with_full_name = gf.gt_train_val_location + '/' + image_name + gf.target_img_ext
                 # print('Image with full name', image_with_full_name)
                 # imageMat = cv2.imread(image_with_full_name)
-                imageMat = image.load_img(image_with_full_name, target_size=(229, 229))
+                imageMat = image.load_img(image_with_full_name, target_size=(299, 299))
                 x = image.img_to_array(imageMat)
                 #print("xshape", x.shape)
                 # print('image shape', imageMat.shape)
